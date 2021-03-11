@@ -1,4 +1,9 @@
-#ISIS1225 - Librerias de soporte
+# ISIS1225 - Librerias de soporte
+
+## Nombres
+Req 2 - María Casto 202020850   m.castroi@uniandes.edu.co
+
+Req 3 - Valentina Calderón  202020771   v.calderonm@uniandes.edu.co
 
 Este proyecto contiene los Tipos abstractos de datos, estructuras de datos y algoritmos requeridos por el curso ISIS1225-Estructuras de Datos y Algoritmos
 
