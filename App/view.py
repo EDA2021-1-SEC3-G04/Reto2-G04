@@ -58,7 +58,7 @@ def loadData(catalog):
     Carga los videos en la estructura de datos
     """
     controller.loadData(catalog)
-    
+
 catalog = None
 
 """
@@ -69,6 +69,8 @@ while True:
     inputs = input('Seleccione una opción para continuar\n')
     if int(inputs[0]) == 1:
         print("Cargando información de los archivos ....")
+        catalog = initCatalog()
+        loadData(catalog)
 
     elif int(inputs[0]) == 2:
         pass
