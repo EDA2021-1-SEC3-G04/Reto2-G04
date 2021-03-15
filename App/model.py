@@ -3,7 +3,7 @@
  * Universidad de Los Andes
  *
  *
- * Desarrolado para el curso ISIS1225 - Estructuras de Datos y Algoritmos
+ * Desarrolado para el curso ISIS122 5 - Estructuras de Datos y Algoritmos
  *
  *
  * This program is free software: you can redistribute it and/or modify
@@ -43,14 +43,14 @@ def newCatalog():
     catalog = {'videos': None,
                'by_countries': None,
                'by_categories': None,
-               'category-id': None}
+               'category-id': None,
+               'video-id': None}
 
-    catalog['videos'] = lt.newList(datastructure='ARRAY_LIST')
-    catalog['by_countries'] = lt.newList(datastructure='ARRAY_LIST', cmpfunction=cmpCountries)
-    catalog['by_categories'] = lt.newList(datastructure='ARRAY_LIST', cmpfunction=cmpCategories)
+    catalog['videos'] = lt.newList(datastructure='ARRAY_LIST', cmpfunction=cmpvideoidslt)
+    catalog['by_categories'] = mp.newMap(390000, maptype='CHAINING', loadfactor=4.0, comparefunction=cmpvideocategories)
     catalog['category-id'] = lt.newList(datastructure='ARRAY_LIST')
+    catalog['video-id'] = mp.newMap(390000, maptype='CHAINING', loadfactor=4.0, comparefunction=cmpvideoids)
     return catalog
-
 
 # Funciones para agregar informacion al catalogo
 
@@ -59,12 +59,11 @@ def addVideo(catalog, video):
     Se añade un video a a lista de videos
     """
     lt.addLast(catalog['videos'], video)
-    country = video['country'].strip()
-    category = int(video['category_id'].strip())
-
+    mp.put(catalog['video-id'], video["video_id"], video)
+    #country = video['country'].strip()
     # Funciones para añadir datos a las listas de pais y categoria
-    addVideoCountry(catalog, country, video)
-    addVideoCategory(catalog, category, video)
+    #addVideoCountry(catalog, country, video)
+    addVideoCategory(catalog, video)
 
 
 def addCategory(catalog, category):
@@ -90,21 +89,33 @@ def addVideoCountry(catalog, country, video):
         lt.addLast(countries_list, new_country)
     lt.addLast(new_country['videos'], video)
 
-def addVideoCategory(catalog, category_id, video):
+def addVideoCategory(catalog, video):
     """
     Adiciona una categoria a lista de categorias si este no esta.
     Las listas de cada pais guarda referencias a los videos de dicho pais
     """
-    categories_list = catalog['by_categories']
-    posCategory = lt.isPresent(categories_list, category_id)
+    try: 
+        categories = catalog['by_categories']
+        if video['category_id'] != '': 
+            category_id = int(video['category_id'])
+        else: 
+            #No sabemos si el -1
+            category_id = -1
+        exist_category  = mp.contains(categories, category_id)
 
-    if posCategory > 0:  # La categoria ya ha sido creada dentro de la lista
-        category = lt.getElement(categories_list, posCategory)
-    else:  # Debemos crear una nueva categoria
-        category = newCategory(category_id)
-        lt.addLast(categories_list, category)
+        if exist_category: 
+            entry = mp.get(categories,category_id)
+            category = me.getValue(entry)
 
-    lt.addLast(category['videos'], video)
+        else: 
+            category = newCategory(category_id)
+            mp.put(categories,category_id,category)
+
+        lt.addlast(category['videos'],video)
+
+    except Exception:
+        return None
+        
 
 
 # Funciones para creacion de datos
