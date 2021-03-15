@@ -47,7 +47,7 @@ def newCatalog():
                'video-id': None}
 
     catalog['videos'] = lt.newList(datastructure='ARRAY_LIST', cmpfunction=cmpVideoIdsLt)
-    catalog['by_categories'] = mp.newMap(390000, maptype='CHAINING', loadfactor=4.0, comparefunction=cmpvideocategories)
+    catalog['by_categories'] = mp.newMap(390000, maptype='CHAINING', loadfactor=4.0, comparefunction=cmpVideoCategories)
     catalog['category-id'] = lt.newList(datastructure='ARRAY_LIST')
     catalog['video-id'] = mp.newMap(390000, maptype='CHAINING', loadfactor=4.0, comparefunction=cmpVideoIds)
     return catalog
@@ -171,6 +171,15 @@ def cmpVideoIds(id, entry):
     if (int(id) == int(identry)):
         return 0
     elif (int(id) > int(identry)):
+        return 1
+    else:
+        return -1
+
+def cmpVideoCategories(id, entry):
+    catentry = me.getKey(entry)
+    if (int(id) == int(catentry)):
+        return 0
+    elif (int(id) > int(catentry)):
         return 1
     else:
         return -1
