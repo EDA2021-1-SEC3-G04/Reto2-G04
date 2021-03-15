@@ -46,10 +46,10 @@ def newCatalog():
                'category-id': None,
                'video-id': None}
 
-    catalog['videos'] = lt.newList(datastructure='ARRAY_LIST', cmpfunction=cmpvideoidslt)
+    catalog['videos'] = lt.newList(datastructure='ARRAY_LIST', cmpfunction=cmpVideoIdsLt)
     catalog['by_categories'] = mp.newMap(390000, maptype='CHAINING', loadfactor=4.0, comparefunction=cmpvideocategories)
     catalog['category-id'] = lt.newList(datastructure='ARRAY_LIST')
-    catalog['video-id'] = mp.newMap(390000, maptype='CHAINING', loadfactor=4.0, comparefunction=cmpvideoids)
+    catalog['video-id'] = mp.newMap(390000, maptype='CHAINING', loadfactor=4.0, comparefunction=cmpVideoIds)
     return catalog
 
 # Funciones para agregar informacion al catalogo
@@ -158,4 +158,20 @@ def newCategoryId(id, name):
 
 # Funciones utilizadas para comparar elementos dentro de una lista
 
+def cmpVideoIdsLt(id1, id2):
+    if id1['video_id'] < id2['video_id']:
+        return -1
+    elif id1['video_id'] > id2['video_id']:
+        return 1
+    else:
+        return 0
+
+def cmpVideoIds(id, entry):
+    identry = me.getKey(entry)
+    if (int(id) == int(identry)):
+        return 0
+    elif (int(id) > int(identry)):
+        return 1
+    else:
+        return -1
 # Funciones de ordenamiento
