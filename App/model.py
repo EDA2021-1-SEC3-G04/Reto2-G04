@@ -168,9 +168,9 @@ def cmpVideoIdsLt(id1, id2):
 
 def cmpVideoIds(id, entry):
     identry = me.getKey(entry)
-    if (int(id) == int(identry)):
+    if (id == identry):
         return 0
-    elif (int(id) > int(identry)):
+    elif (id > identry):
         return 1
     else:
         return -1
