@@ -47,7 +47,7 @@ def newCatalog():
                'video-id': None}
 
     catalog['videos'] = lt.newList(datastructure='ARRAY_LIST', cmpfunction=cmpVideoIdsLt)
-    catalog['by_categories'] = mp.newMap(100, maptype='CHAINING', loadfactor=4.0, comparefunction=cmpVideoCategories)
+    catalog['by_categories'] = mp.newMap(97, maptype='PROBING', loadfactor=4.0, comparefunction=cmpVideoCategories)
     catalog['category-id'] = lt.newList(datastructure='ARRAY_LIST')
     catalog['video-id'] = mp.newMap(390000, maptype='CHAINING', loadfactor=4.0, comparefunction=cmpVideoIds)
     return catalog
@@ -101,7 +101,7 @@ def addVideoCategory(catalog, video):
         else: 
             #No sabemos si el -1
             category_id = -1
-        exist_category  = mp.contains(categories, category_id)
+        exist_category = mp.contains(categories, category_id)
 
         if exist_category: 
             entry = mp.get(categories,category_id)
@@ -109,9 +109,9 @@ def addVideoCategory(catalog, video):
 
         else: 
             category = newCategory(category_id)
-            mp.put(categories,category_id,category)
+            mp.put(categories, category_id, category)
 
-        lt.addlast(category['videos'],video)
+        lt.addLast(category['videos'], video)
 
     except Exception:
         return None
