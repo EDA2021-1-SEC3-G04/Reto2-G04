@@ -49,7 +49,8 @@ def newCatalog():
     catalog['videos'] = lt.newList(datastructure='ARRAY_LIST', cmpfunction=cmpVideoIdsLt)
     catalog['by_categories'] = mp.newMap(97, maptype='PROBING', loadfactor=4.0, comparefunction=cmpVideoCategories)
     catalog['category-id'] = lt.newList(datastructure='ARRAY_LIST')
-    catalog['video-id'] = mp.newMap(390000, maptype='CHAINING', loadfactor=4.0, comparefunction=cmpVideoIds)
+    catalog['video-id'] = mp.newMap(390000, maptype='CHANING', loadfactor=4.0, comparefunction=cmpVideoIds)
+    catalog['by_countries'] = mp.newMap(19, maptype='PROBING', loadfactor=4.0, comparefunction=cmpVideoCountries)
     return catalog
 
 # Funciones para agregar informacion al catalogo
@@ -60,9 +61,8 @@ def addVideo(catalog, video):
     """
     lt.addLast(catalog['videos'], video)
     mp.put(catalog['video-id'], video["video_id"], video)
-    #country = video['country'].strip()
-    # Funciones para añadir datos a las listas de pais y categoria
-    #addVideoCountry(catalog, country, video)
+    #Funciones para añadir datos a las listas de pais y categoria
+    addVideoCountry(catalog, video)
     addVideoCategory(catalog, video)
 
 
@@ -74,20 +74,33 @@ def addCategory(catalog, category):
     lt.addLast(catalog['category-id'], c)
 
 
-def addVideoCountry(catalog, country, video):
+def addVideoCountry(catalog, video):
     """
     Adiciona un pais a lista de paises.
     Las listas de cada pais guarda referencias a los videos de dicho pais
     """
-    countries_list = catalog['by_countries']
-    posCountry = lt.isPresent(countries_list, country)
+    try: 
+        countries = catalog['by_countries']
+        if video['country'] != '': 
+            country_name = (video['country'])
+        else: 
+            #No sabemos si el -1
+            country_name = " "
+        exist_counttry = mp.contains(countries, country_name)
 
-    if posCountry > 0:  # El pais ya ha sido creada dentro de la lista
-        new_country = lt.getElement(countries_list, posCountry)
-    else:   # Debemos crear nuevo pais
-        new_country = newCountry(country)
-        lt.addLast(countries_list, new_country)
-    lt.addLast(new_country['videos'], video)
+        if exist_country: 
+            entry = mp.get(countries,country_name)
+            country_list = me.getValue(entry)
+
+        else: 
+            country_list = newCountry(country_name)
+            mp.put(countries,country_name,country_list)
+
+        lt.addlast(country['videos'],video)
+
+    except Exception:
+        return None
+
 
 def addVideoCategory(catalog, video):
     """
@@ -101,7 +114,7 @@ def addVideoCategory(catalog, video):
         else: 
             #No sabemos si el -1
             category_id = -1
-        exist_category = mp.contains(categories, category_id)
+        exist_category  = mp.contains(categories, category_id)
 
         if exist_category: 
             entry = mp.get(categories,category_id)
@@ -109,9 +122,9 @@ def addVideoCategory(catalog, video):
 
         else: 
             category = newCategory(category_id)
-            mp.put(categories, category_id, category)
+            mp.put(categories,category_id,category)
 
-        lt.addLast(category['videos'], video)
+        lt.addlast(category['videos'],video)
 
     except Exception:
         return None
@@ -180,6 +193,15 @@ def cmpVideoCategories(id, entry):
     if (int(id) == int(catentry)):
         return 0
     elif (int(id) > int(catentry)):
+        return 1
+    else:
+        return -1
+
+def cmpVideoCountries(country,count_entry):
+    ctentry = me.getKey(count_entry)
+    if (country) == (ctentry):
+        return 0
+    elif (country) > (ctentry):
         return 1
     else:
         return -1
