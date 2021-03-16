@@ -84,19 +84,19 @@ def addVideoCountry(catalog, video):
         if video['country'] != '': 
             country_name = (video['country'])
         else: 
-            #No sabemos si el -1
+            # No sabemos si el -1
             country_name = " "
-        exist_counttry = mp.contains(countries, country_name)
+        exist_country = mp.contains(countries, country_name)
 
         if exist_country: 
-            entry = mp.get(countries,country_name)
+            entry = mp.get(countries, country_name)
             country_list = me.getValue(entry)
 
         else: 
             country_list = newCountry(country_name)
             mp.put(countries,country_name,country_list)
 
-        lt.addlast(country['videos'],video)
+        lt.addLast(country_list['videos'],video)
 
     except Exception:
         return None
@@ -124,7 +124,7 @@ def addVideoCategory(catalog, video):
             category = newCategory(category_id)
             mp.put(categories,category_id,category)
 
-        lt.addlast(category['videos'],video)
+        lt.addLast(category['videos'],video)
 
     except Exception:
         return None
