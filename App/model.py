@@ -48,7 +48,7 @@ def newCatalog():
 
     catalog['videos'] = lt.newList(datastructure='ARRAY_LIST', cmpfunction=cmpVideoIdsLt)
     catalog['by_categories'] = mp.newMap(97, maptype='PROBING', loadfactor=4.0, comparefunction=cmpVideoCategories)
-    catalog['category-id'] = lt.newList(datastructure='ARRAY_LIST')
+    catalog['category-id'] = mp.newMap(97, maptype='PROBING', loadfactor=0.5, comparefunction=cmpVideoCategories)
     catalog['video-id'] = mp.newMap(390000, maptype='CHANING', loadfactor=4.0, comparefunction=cmpVideoIds)
     catalog['by_countries'] = mp.newMap(19, maptype='PROBING', loadfactor=4.0, comparefunction=cmpVideoCountries)
     return catalog
@@ -62,7 +62,7 @@ def addVideo(catalog, video):
     lt.addLast(catalog['videos'], video)
     mp.put(catalog['video-id'], video["video_id"], video)
     #Funciones para añadir datos a las listas de pais y categoria
-    addVideoCountry(catalog, video)
+    # addVideoCountry(catalog, video)
     addVideoCategory(catalog, video)
 
 
@@ -70,8 +70,9 @@ def addCategory(catalog, category):
     """
     Se añade una categoria (su id y nombre) a a lista de categoria
     """
-    c = newCategoryId(category['id'], category['name'])
-    lt.addLast(catalog['category-id'], c)
+    id = int(category['id'])
+    name = category['name'].strip()
+    mp.put(catalog['category-id'], name, id)
 
 
 def addVideoCountry(catalog, video):
@@ -169,6 +170,29 @@ def newCategoryId(id, name):
 
 # Funciones de consulta
 
+def getCategoryId(catalog, category):
+    exists_category = mp.contains(catalog['category-id'], category)
+    category_id = None
+    if exists_category: 
+        category_id_pair = mp.get(catalog['category-id'], category)
+        category_id = me.getValue(category_id_pair )
+    return category_id
+
+def getCategory(catalog, category_id):
+    category_list = mp.get(catalog['by_categories'], category_id)
+    category_list = me.getValue(category_list)
+
+def videoSize(catalog):
+    """
+    Número de libros en el catago
+    """
+    return lt.size(catalog['videos'])
+
+def categorySize(catalog):
+    """
+    Número de libros en el catago
+    """
+    return lt.size(catalog['category-id'])
 # Funciones utilizadas para comparar elementos dentro de una lista
 
 def cmpVideoIdsLt(id1, id2):
@@ -205,4 +229,11 @@ def cmpVideoCountries(country,count_entry):
         return 1
     else:
         return -1
+
+
 # Funciones de ordenamiento
+
+def sortLikes(video_list): 
+    likes_sort = video_list.copy()
+    likes_sort = mer.sort(likes_sort, cmpLikes)
+    return likes_sort

@@ -71,9 +71,19 @@ while True:
         print("Cargando información de los archivos ....")
         catalog = initCatalog()
         loadData(catalog)
+        print('Videos cargados: ' + str(controller.videoSize(catalog)))
+        print('Registros de categorías cargados' + str(controller.categorySize(catalog)))
 
     elif int(inputs[0]) == 2:
-        pass
+        number = int(input("Buscando los top: "))
+        country = input("Pais a consultar los top " + str(number) + " videos: ")
+        category = input("Categoria a consultar los top " + str(number) + " videos: ")
+        category_id = controller.getCategoryId(catalog, category)
+        # TODO: validar country y category
+        if category_id is not None:
+            result = controller.topCountryCategory(catalog, number, country, category_id)
+            print("\nLos top", number, "videos de", country, "&", category, "son:\n")
+        # printTopVideos(result)
 
     else:
         sys.exit(0)

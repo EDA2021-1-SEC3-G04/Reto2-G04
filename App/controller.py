@@ -72,5 +72,42 @@ def loadCategoryIds(catalog):
 # Funciones para la carga de datos
 
 # Funciones de ordenamiento
+def sortViews(views_list):
+    """
+    Ordena los libros por views
+    """
+    return model.sortViews(views_list)
 
 # Funciones de consulta sobre el catálogo
+def getCategoryId(catalog, category):
+    """
+    Retorna la informacion de esa categoria: lista de videos correspondientes
+    """
+    return model.getCategoryId(catalog, category)
+
+def getCategory(catalog, category_id): 
+    return model.getCategory(catalog, category_id)
+
+def topCountryCategory(catalog, number, country, category_id): 
+    """
+    Función base requerimiento 1. 
+    Retorna lista con los top x videos con más views de un pais y una categoria
+    """
+    category_list = getCategory(catalog, category_id)
+    sorted_cat_list = sortViews(category_list['videos'])
+    # top_vids = findTopsCountryCategory(sorted_cat_list, number, country)
+    return None
+
+
+
+def videoSize(catalog):
+    """
+    Numero de videos cargados al catalogo
+    """
+    return model.videoSize(catalog)
+
+def categorySize(catalog):
+    """
+    Numero de videos cargados al catalogo
+    """
+    return model.videoSize(catalog)
