@@ -29,7 +29,7 @@ import config as cf
 from DISClib.ADT import list as lt
 from DISClib.ADT import map as mp
 from DISClib.DataStructures import mapentry as me
-from DISClib.Algorithms.Sorting import shellsort as sa
+from DISClib.Algorithms.Sorting import mergesort as mer
 assert cf
 
 """
@@ -47,10 +47,22 @@ def newCatalog():
                'video-id': None}
 
     catalog['videos'] = lt.newList(datastructure='ARRAY_LIST', cmpfunction=cmpVideoIdsLt)
-    catalog['by_categories'] = mp.newMap(97, maptype='PROBING', loadfactor=4.0, comparefunction=cmpVideoCategories)
-    catalog['category-id'] = mp.newMap(97, maptype='PROBING', loadfactor=0.5, comparefunction=cmpVideoCategories)
-    catalog['video-id'] = mp.newMap(390000, maptype='CHANING', loadfactor=4.0, comparefunction=cmpVideoIds)
-    catalog['by_countries'] = mp.newMap(19, maptype='PROBING', loadfactor=4.0, comparefunction=cmpVideoCountries)
+    catalog['by_categories'] = mp.newMap(97, 
+                                        maptype='PROBING', 
+                                        loadfactor=0.5, 
+                                        comparefunction=cmpVideoCategoriesId)
+    catalog['category-id'] = mp.newMap(97, 
+                                        maptype='PROBING', 
+                                        loadfactor=0.5,   
+                                        comparefunction=cmpVideoCategories)
+    catalog['video-id'] = mp.newMap(390000, 
+                                        maptype='CHANING', 
+                                        loadfactor=4.0, 
+                                        comparefunction=cmpVideoIds)
+    catalog['by_countries'] = mp.newMap(19, 
+                                        maptype='PROBING', 
+                                        loadfactor=0.5,
+                                        comparefunction=cmpVideoCountries)
     return catalog
 
 # Funciones para agregar informacion al catalogo
@@ -60,9 +72,9 @@ def addVideo(catalog, video):
     Se añade un video a a lista de videos
     """
     lt.addLast(catalog['videos'], video)
-    mp.put(catalog['video-id'], video["video_id"], video)
-    #Funciones para añadir datos a las listas de pais y categoria
-    # addVideoCountry(catalog, video)
+    # mp.put(catalog['video-id'], video["video_id"], video)
+    # Funciones para añadir datos a las listas de pais y categoria
+    addVideoCountry(catalog, video)
     addVideoCategory(catalog, video)
 
 
@@ -95,7 +107,7 @@ def addVideoCountry(catalog, video):
 
         else: 
             country_list = newCountry(country_name)
-            mp.put(countries,country_name,country_list)
+            mp.put(countries, country_name, country_list)
 
         lt.addLast(country_list['videos'],video)
 
@@ -113,19 +125,19 @@ def addVideoCategory(catalog, video):
         if video['category_id'] != '': 
             category_id = int(video['category_id'])
         else: 
-            #No sabemos si el -1
+            # No sabemos si el -1
             category_id = -1
-        exist_category  = mp.contains(categories, category_id)
+        exist_category = mp.contains(categories, category_id)
 
         if exist_category: 
-            entry = mp.get(categories,category_id)
+            entry = mp.get(categories, category_id)
             category = me.getValue(entry)
 
         else: 
             category = newCategory(category_id)
-            mp.put(categories,category_id,category)
+            mp.put(categories, category_id, category)
 
-        lt.addLast(category['videos'],video)
+        lt.addLast(category['videos'], video)
 
     except Exception:
         return None
@@ -175,12 +187,13 @@ def getCategoryId(catalog, category):
     category_id = None
     if exists_category: 
         category_id_pair = mp.get(catalog['category-id'], category)
-        category_id = me.getValue(category_id_pair )
+        category_id = me.getValue(category_id_pair)
     return category_id
 
 def getCategory(catalog, category_id):
     category_list = mp.get(catalog['by_categories'], category_id)
     category_list = me.getValue(category_list)
+    return category_list
 
 def videoSize(catalog):
     """
@@ -193,6 +206,23 @@ def categorySize(catalog):
     Número de libros en el catago
     """
     return lt.size(catalog['category-id'])
+
+
+def findTopsCountryCategory(sorted_cat_list, number, country): 
+    """
+    Requerimiento 1
+    Crea una lista con los x videos con más views que corresponda a un  pais de una lista ordenada por views. 
+    """
+    topVideos = lt.newList(datastructure='ARRAY_LIST')
+    pos = 1
+    while number > 0 and pos < lt.size(sorted_cat_list): 
+        video = lt.getElement(sorted_cat_list, pos)
+        if video['country'] == country: 
+            lt.addLast(topVideos, video)
+            number -= 1
+        pos += 1
+
+    return topVideos
 # Funciones utilizadas para comparar elementos dentro de una lista
 
 def cmpVideoIdsLt(id1, id2):
@@ -212,11 +242,20 @@ def cmpVideoIds(id, entry):
     else:
         return -1
 
-def cmpVideoCategories(id, entry):
+def cmpVideoCategoriesId(id, entry):
     catentry = me.getKey(entry)
     if (int(id) == int(catentry)):
         return 0
     elif (int(id) > int(catentry)):
+        return 1
+    else:
+        return -1
+
+def cmpVideoCategories(id, entry):
+    catentry = me.getKey(entry)
+    if (id == catentry):
+        return 0
+    elif (id > catentry):
         return 1
     else:
         return -1
@@ -230,10 +269,27 @@ def cmpVideoCountries(country,count_entry):
     else:
         return -1
 
+def cmpLikes(video1, video2): 
+    return int(video1['likes']) < int(video2['likes'])
 
+def compVideosByViews(video1, video2):
+    views1 = int(video1["views"])
+    views2 = int(video2["views"])
+
+    if views1 == views2:
+        return 0
+    elif views1 > views2:
+        return 1
+    else:
+        return 0
 # Funciones de ordenamiento
 
 def sortLikes(video_list): 
     likes_sort = video_list.copy()
     likes_sort = mer.sort(likes_sort, cmpLikes)
     return likes_sort
+
+def sortViews(catalog):
+    sub_list = catalog.copy()
+    sorted_list = mer.sort(sub_list, compVideosByViews)
+    return sorted_list

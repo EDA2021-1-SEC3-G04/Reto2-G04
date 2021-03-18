@@ -79,6 +79,7 @@ def sortViews(views_list):
     return model.sortViews(views_list)
 
 # Funciones de consulta sobre el catálogo
+
 def getCategoryId(catalog, category):
     """
     Retorna la informacion de esa categoria: lista de videos correspondientes
@@ -95,9 +96,8 @@ def topCountryCategory(catalog, number, country, category_id):
     """
     category_list = getCategory(catalog, category_id)
     sorted_cat_list = sortViews(category_list['videos'])
-    # top_vids = findTopsCountryCategory(sorted_cat_list, number, country)
-    return None
-
+    top_vids = findTopsCountryCategory(sorted_cat_list, number, country)
+    return top_vids
 
 
 def videoSize(catalog):
@@ -111,3 +111,13 @@ def categorySize(catalog):
     Numero de videos cargados al catalogo
     """
     return model.videoSize(catalog)
+
+
+def findTopsCountryCategory(sorted_cat_list, number, country): 
+    """
+    Llama a funcion del modelo que busca y retorna los x videos con más views que son del 
+    pais correspondiente
+    """
+    return model.findTopsCountryCategory(sorted_cat_list, number, country)
+
+
