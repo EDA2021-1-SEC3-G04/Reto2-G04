@@ -57,7 +57,9 @@ def loadData(catalog):
     """
     Carga los videos en la estructura de datos
     """
-    controller.loadData(catalog)
+    answer = controller.loadData(catalog)
+    return answer
+    
 def printTopVideos(video_list): 
     """
     Imprime los videos del requerimiento 1 con los datos trending date, title, cahnnel, publish time
@@ -82,9 +84,11 @@ while True:
     if int(inputs[0]) == 1:
         print("Cargando información de los archivos ....")
         catalog = initCatalog()
-        loadData(catalog)
+        answer = loadData(catalog)
         print('Videos cargados: ' + str(controller.videoSize(catalog)))
         print('Registros de categorías cargados' + str(controller.categorySize(catalog)))
+        print("Tiempo [ms]: ", f"{answer[0]:.3f}", "  ||  ",
+              "Memoria [kB]: ", f"{answer[1]:.3f}")
 
     elif int(inputs[0]) == 2:
         number = int(input("Buscando los top: "))
