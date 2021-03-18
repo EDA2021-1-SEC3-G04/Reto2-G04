@@ -74,7 +74,7 @@ def addVideo(catalog, video):
     lt.addLast(catalog['videos'], video)
     # mp.put(catalog['video-id'], video["video_id"], video)
     # Funciones para añadir datos a las listas de pais y categoria
-    addVideoCountry(catalog, video)
+    #addVideoCountry(catalog, video)
     addVideoCategory(catalog, video)
 
 
