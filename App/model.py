@@ -47,14 +47,18 @@ def newCatalog():
                'video-id': None}
 
     catalog['videos'] = lt.newList(datastructure='ARRAY_LIST', cmpfunction=cmpVideoIdsLt)
+
+    # TODO: este es el que toca cambiar el maptype y el loadfactor!
     catalog['by_categories'] = mp.newMap(97, 
-                                        maptype='PROBING', 
-                                        loadfactor=0.5, 
+                                        maptype='CHANING', 
+                                        loadfactor=2.00, 
                                         comparefunction=cmpVideoCategoriesId)
+
     catalog['category-id'] = mp.newMap(97, 
                                         maptype='PROBING', 
                                         loadfactor=0.5,   
                                         comparefunction=cmpVideoCategories)
+
     catalog['video-id'] = mp.newMap(390000, 
                                         maptype='CHANING', 
                                         loadfactor=4.0, 
@@ -74,7 +78,7 @@ def addVideo(catalog, video):
     lt.addLast(catalog['videos'], video)
     # mp.put(catalog['video-id'], video["video_id"], video)
     # Funciones para añadir datos a las listas de pais y categoria
-    #addVideoCountry(catalog, video)
+    # addVideoCountry(catalog, video)
     addVideoCategory(catalog, video)
 
 
