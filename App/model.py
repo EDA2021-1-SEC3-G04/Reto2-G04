@@ -50,8 +50,8 @@ def newCatalog():
 
     # TODO: este es el que toca cambiar el maptype y el loadfactor!
     catalog['by_categories'] = mp.newMap(97, 
-                                        maptype='CHANING', 
-                                        loadfactor=2.00, 
+                                        maptype='CHAINING', 
+                                        loadfactor=6.00, 
                                         comparefunction=cmpVideoCategoriesId)
 
     catalog['category-id'] = mp.newMap(97, 
@@ -60,7 +60,7 @@ def newCatalog():
                                         comparefunction=cmpVideoCategories)
 
     catalog['video-id'] = mp.newMap(390000, 
-                                        maptype='CHANING', 
+                                        maptype='CHAINING', 
                                         loadfactor=4.0, 
                                         comparefunction=cmpVideoIds)
     catalog['by_countries'] = mp.newMap(19, 
