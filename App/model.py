@@ -60,7 +60,7 @@ def newCatalog():
                                         comparefunction=cmpVideoCategories)
 
     catalog['video-id'] = mp.newMap(390000, 
-                                        maptype='CHANING', 
+                                        maptype='CHAINING', 
                                         loadfactor=4.0, 
                                         comparefunction=cmpVideoIds)
     catalog['by_countries'] = mp.newMap(19, 
