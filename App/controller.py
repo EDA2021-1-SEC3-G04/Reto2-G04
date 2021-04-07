@@ -95,6 +95,12 @@ def sortViews(views_list):
     """
     return model.sortViews(views_list)
 
+def sortVideoId(category_list):
+    """
+    Ordena los libros por video_id
+    """
+    return model.sortVideoId(category_list)
+    
 # Funciones de consulta sobre el catálogo
 
 def getCategoryId(catalog, category):
@@ -106,6 +112,9 @@ def getCategoryId(catalog, category):
 def getCategory(catalog, category_id): 
     return model.getCategory(catalog, category_id)
 
+def getCountry(catalog, country):
+    return model.getCountry(catalog, country)
+
 def topCountryCategory(catalog, number, country, category_id): 
     """
     Función base requerimiento 1. 
@@ -115,6 +124,15 @@ def topCountryCategory(catalog, number, country, category_id):
     sorted_cat_list = sortViews(category_list['videos'])
     top_vids = findTopsCountryCategory(sorted_cat_list, number, country)
     return top_vids
+
+def topVidByCountry(country_list):
+    """
+    Función base requerimiento 2. 
+    Retorna lista con el video que más dias a sido trending 
+    """
+    sorted_country_lst = sortVideoId(country_list['videos'])
+    top_countries = findTopVideoCountry(sorted_country_lst)
+    return top_countries
 
 
 def videoSize(catalog):

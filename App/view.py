@@ -62,7 +62,7 @@ def loadData(catalog):
     
 def printTopVideos(video_list): 
     """
-    Imprime los videos del requerimiento 1 con los datos trending date, title, cahnnel, publish time
+    Imprime los videos del requerimiento 1 con los datos trending date, title, channel, publish time
     views, likes, dislikes
     """ 
     for video in video_list['elements']: 
@@ -104,7 +104,20 @@ while True:
         else:
             print("No se aceptan numero negativos")
         # printTopVideos(result)
+    elif int(inputs[0]) == 3:
+        country = input("País a consultar el video trending x más dias: ")
 
+        valid_country = controller.getCountry(countries_list, country)
+        if valid_country is not None:
+            top_video = controller.topVidByCountry(valid_country)
+            video = top_video[0]
+            trend_days = top_video[1]
+            print('\nEl video más trending de', country, 'fue:')
+            print('Título:', video['title'], ' Canal: ', video['channel_title'],
+                  '  Country: ', video['country'])
+            print('Días trending: ', trend_days, '\n')
+        else:
+            print('País no válido')
     else:
         sys.exit(0)
 sys.exit(0)

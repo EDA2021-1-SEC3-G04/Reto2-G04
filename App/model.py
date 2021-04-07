@@ -199,6 +199,12 @@ def getCategory(catalog, category_id):
     category_list = me.getValue(category_list)
     return category_list
 
+def getCountry(catalog, country): 
+    country = mp.get(catalog['by_countries'], country)
+    country_list = me.getValue(country)
+    return country_list
+
+
 def videoSize(catalog):
     """
     Número de libros en el catago
