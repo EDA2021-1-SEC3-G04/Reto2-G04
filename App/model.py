@@ -78,7 +78,7 @@ def addVideo(catalog, video):
     lt.addLast(catalog['videos'], video)
     # mp.put(catalog['video-id'], video["video_id"], video)
     # Funciones para añadir datos a las listas de pais y categoria
-    # addVideoCountry(catalog, video)
+    addVideoCountry(catalog, video)
     addVideoCategory(catalog, video)
 
 
@@ -201,8 +201,9 @@ def getCategory(catalog, category_id):
 
 def getCountry(catalog, country): 
     country = mp.get(catalog['by_countries'], country)
-    country_list = me.getValue(country)
-    return country_list
+    if country is not None: 
+        country = me.getValue(country)
+    return country
 
 
 def videoSize(catalog):
@@ -234,6 +235,40 @@ def findTopsCountryCategory(sorted_cat_list, number, country):
 
     return topVideos
 # Funciones utilizadas para comparar elementos dentro de una lista
+def findTopVideoCountries(country_list):
+    """
+    Requerimiento 2
+    Crea lista con una estructura para modelar cada video y las veces que este aparece dentro de una lista (cuantos dias ha sido trending). 
+    Con esa lista determina cuale de los videos ha tenido más dias trending. 
+    """
+    pos = 1
+    reps_per_video = lt.newList(datastructure='ARRAY_LIST')
+    current_reps = 1
+    while pos < lt.size(country_list) - 1:
+        current_elem = lt.getElement(country_list, pos)
+        next_elem = lt.getElement(country_list, pos + 1)
+
+        if current_elem['video_id'] != '#NAME?' and current_elem['video_id'] == next_elem['video_id']:
+            current_reps += 1
+        else:
+            video_data = mp.newMap(5, maptype='PROBING', loadfactor=0.5)
+            mp.put(video_data, 'video', current_elem)
+            mp.put(video_data, 'reps', current_reps)
+            current_reps = 1
+            lt.addLast(reps_per_video, video_data)
+
+        pos += 1
+
+    top_video = ""
+    top_reps = 0
+    for item in lt.iterator(reps_per_video):
+        reps = me.getValue(mp.get(item, 'reps'))
+        if reps > top_reps:
+            top_reps = reps
+            top_video = me.getValue(mp.get(item, 'video'))
+
+    return top_video, top_reps
+
 
 def cmpVideoIdsLt(id1, id2):
     if id1['video_id'] < id2['video_id']:
@@ -270,7 +305,7 @@ def cmpVideoCategories(id, entry):
     else:
         return -1
 
-def cmpVideoCountries(country,count_entry):
+def cmpVideoCountries(country, count_entry):
     ctentry = me.getKey(count_entry)
     if (country) == (ctentry):
         return 0
@@ -292,6 +327,9 @@ def compVideosByViews(video1, video2):
         return 1
     else:
         return 0
+
+def cmpVideoIdSort(video1, video2):
+    return video1['video_id'] < video2['video_id']
 # Funciones de ordenamiento
 
 def sortLikes(video_list): 
@@ -303,3 +341,8 @@ def sortViews(catalog):
     sub_list = catalog.copy()
     sorted_list = mer.sort(sub_list, compVideosByViews)
     return sorted_list
+
+def sortVideoId(category_list):
+    vid_id_sort = category_list.copy()
+    vid_id_sort = mer.sort(vid_id_sort, cmpVideoIdSort)
+    return vid_id_sort

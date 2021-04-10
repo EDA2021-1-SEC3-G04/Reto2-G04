@@ -107,7 +107,7 @@ while True:
     elif int(inputs[0]) == 3:
         country = input("País a consultar el video trending x más dias: ")
 
-        valid_country = controller.getCountry(countries_list, country)
+        valid_country = controller.getCountry(catalog, country)
         if valid_country is not None:
             top_video = controller.topVidByCountry(valid_country)
             video = top_video[0]

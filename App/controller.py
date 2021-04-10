@@ -100,7 +100,7 @@ def sortVideoId(category_list):
     Ordena los libros por video_id
     """
     return model.sortVideoId(category_list)
-    
+
 # Funciones de consulta sobre el catálogo
 
 def getCategoryId(catalog, category):
@@ -154,6 +154,15 @@ def findTopsCountryCategory(sorted_cat_list, number, country):
     pais correspondiente
     """
     return model.findTopsCountryCategory(sorted_cat_list, number, country)
+
+def findTopVideoCountry(country_list):
+    """
+    Llama al a función del modelo que busca el video que más dais a sido trending de ese país
+    """
+    return model.findTopVideoCountries(country_list)
+
+
+
 
 # ======================================
 # Funciones para medir tiempo y memoria
