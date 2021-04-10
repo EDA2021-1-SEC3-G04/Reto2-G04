@@ -33,9 +33,11 @@ from DISClib.Algorithms.Sorting import mergesort as mer
 assert cf
 
 """
-Se define la estructura de un catálogo de videos. El catálogo tendrá dos listas, una para los videos, otra para las categorias de
-los mismos.
+Se define la estructura de un catálogo de videos.
 """
+
+
+# Construccion de modelos
 def newCatalog():
     """
     Se define la estructura de un catálogo de videos. El catálogo tendrá tres 4, una para los videos, una para los category ids, otra para las categorias de los mismos y otra para los paises de los mismos.
@@ -59,10 +61,10 @@ def newCatalog():
                                         loadfactor=0.5,   
                                         comparefunction=cmpVideoCategories)
 
-    catalog['video-id'] = mp.newMap(390000, 
-                                        maptype='CHAINING', 
-                                        loadfactor=4.0, 
-                                        comparefunction=cmpVideoIds)
+    # catalog['video-id'] = mp.newMap(390000, 
+    #                                     maptype='CHAINING', 
+    #                                     loadfactor=4.0, 
+    #                                     comparefunction=cmpVideoIds)
     catalog['by_countries'] = mp.newMap(19, 
                                         maptype='PROBING', 
                                         loadfactor=0.5,
@@ -77,6 +79,7 @@ def addVideo(catalog, video):
     """
     lt.addLast(catalog['videos'], video)
     # mp.put(catalog['video-id'], video["video_id"], video)
+
     # Funciones para añadir datos a las listas de pais y categoria
     addVideoCountry(catalog, video)
     addVideoCategory(catalog, video)
@@ -149,6 +152,8 @@ def addVideoCategory(catalog, video):
 
 
 # Funciones para creacion de datos
+
+
 def newCategory(category_id):
     """
     Crea una nueva estructura para modelar los videos de un category id
@@ -178,11 +183,9 @@ def newCategoryId(id, name):
     category['name'] = name.strip()
     return category
 
-# Construccion de modelos
 
-# Funciones para agregar informacion al catalogo
 
-# Funciones para creacion de datos
+
 
 # Funciones de consulta
 
@@ -194,10 +197,12 @@ def getCategoryId(catalog, category):
         category_id = me.getValue(category_id_pair)
     return category_id
 
+
 def getCategory(catalog, category_id):
     category_list = mp.get(catalog['by_categories'], category_id)
     category_list = me.getValue(category_list)
     return category_list
+
 
 def getCountry(catalog, country): 
     country = mp.get(catalog['by_countries'], country)
@@ -211,6 +216,7 @@ def videoSize(catalog):
     Número de libros en el catago
     """
     return lt.size(catalog['videos'])
+
 
 def categorySize(catalog):
     """
@@ -234,7 +240,8 @@ def findTopsCountryCategory(sorted_cat_list, number, country):
         pos += 1
 
     return topVideos
-# Funciones utilizadas para comparar elementos dentro de una lista
+
+
 def findTopVideoCountries(country_list):
     """
     Requerimiento 2
@@ -269,6 +276,8 @@ def findTopVideoCountries(country_list):
 
     return top_video, top_reps
 
+
+# Funciones utilizadas para comparar elementos dentro de una lista
 
 def cmpVideoIdsLt(id1, id2):
     if id1['video_id'] < id2['video_id']:
@@ -330,6 +339,8 @@ def compVideosByViews(video1, video2):
 
 def cmpVideoIdSort(video1, video2):
     return video1['video_id'] < video2['video_id']
+
+
 # Funciones de ordenamiento
 
 def sortLikes(video_list): 
