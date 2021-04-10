@@ -125,10 +125,9 @@ while True:
     elif int(inputs[0]) == 4:
         category_name = input(
             "Categoria a consultar el video trending x más dias: ")
-        category_ids = catalog['category-id']
-        category_id = controller.getId(category_ids, category_name)
+        category_id = controller.getCategoryId(catalog,category_name)
         if category_id is not None:
-            top_video = controller.topVidByCategory()
+            top_video = controller.topVidByCategory(catalog, category_id)
             video = top_video[0]
             trend_days = top_video[1]
             print('\nEl video más trending de', category_name, 'fue:')

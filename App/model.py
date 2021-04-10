@@ -210,6 +210,11 @@ def getCountry(catalog, country):
         country = me.getValue(country)
     return country
 
+def getId(category_ids, category_name)): 
+    category = mp.get(catalog['by_categories'], category)
+    if category is not None: 
+        category = me.getValue(category)
+    return category
 
 def videoSize(catalog):
     """
@@ -276,6 +281,41 @@ def findTopVideoCountries(country_list):
 
     return top_video, top_reps
 
+
+
+def findTopVideo(category_list):
+    """
+    Requerimiento 3
+    Crea lista con una estructura para modelar cada video y las veces que este aparece dentro de una lista (cuantos dias ha sido trending). 
+    Con esa lista determina cuale de los videos ha tenido más dias trending. 
+    """
+    pos = 1
+    reps_per_video = lt.newList(datastructure='ARRAY_LIST')
+    current_reps = 1
+    while pos < lt.size(category_list) - 1:
+        current_elem = lt.getElement(category_list, pos)
+        next_elem = lt.getElement(category_list, pos + 1)
+
+        if current_elem['video_id'] != '#NAME?' and current_elem['video_id'] == next_elem['video_id']:
+            current_reps += 1
+        else:
+            video_data = mp.newMap(5, maptype='PROBING', loadfactor=0.5)
+            mp.put(video_data, 'video', current_elem)
+            mp.put(video_data, 'reps', current_reps)
+            current_reps = 1
+            lt.addLast(reps_per_video, video_data)
+
+        pos += 1
+
+    top_video = ""
+    top_reps = 0
+    for item in lt.iterator(reps_per_video):
+        reps = me.getValue(mp.get(item, 'reps'))
+        if reps > top_reps:
+            top_reps = reps
+            top_video = me.getValue(mp.get(item, 'video'))
+
+    return top_video, top_reps
 
 # Funciones utilizadas para comparar elementos dentro de una lista
 

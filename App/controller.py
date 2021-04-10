@@ -101,6 +101,7 @@ def sortVideoId(category_list):
     """
     return model.sortVideoId(category_list)
 
+
 # Funciones de consulta sobre el catálogo
 
 def getCategoryId(catalog, category):
@@ -162,6 +163,33 @@ def findTopVideoCountry(country_list):
     return model.findTopVideoCountries(country_list)
 
 
+def getId(category_ids, category_name):
+    """
+    Retorna los el id que corresponde al el nombre de una categoria 
+    """
+    return model.getId(category_ids, category_name)
+
+def topVidByCategory(catalog, category_id):
+    """
+    Función base requerimiento 3. 
+    """
+    category_list = getCategory(catalog, category_id)
+    sorted_cat_lst = sortVideoId(category_list['videos'])
+    top_vid = findTopVideo(sorted_cat_lst)
+    return top_vid
+
+
+def getCategory(catalog, category_id):
+    """
+    Retorna la informacion de esa categoria: lista de videos correspondientes
+    """
+    return model.getCategory(catalog, category_id)
+
+def findTopVideo(category_list):
+    """
+    Llama al a función del modelo que busca el video que más dais a sido trending de esa categoria
+    """
+    return model.findTopVideo(category_list)
 
 
 # ======================================
