@@ -104,6 +104,8 @@ while True:
         else:
             print("No se aceptan numero negativos")
         # printTopVideos(result)
+
+
     elif int(inputs[0]) == 3:
         country = input("País a consultar el video trending x más dias: ")
 
@@ -118,6 +120,24 @@ while True:
             print('Días trending: ', trend_days, '\n')
         else:
             print('País no válido')
+
+
+    elif int(inputs[0]) == 4:
+        category_name = input(
+            "Categoria a consultar el video trending x más dias: ")
+        category_ids = catalog['category-id']
+        category_id = controller.getId(category_ids, category_name)
+        if category_id is not None:
+            top_video = controller.topVidByCategory()
+            video = top_video[0]
+            trend_days = top_video[1]
+            print('\nEl video más trending de', category_name, 'fue:')
+            print('Título:', video['title'], ' Canal: ', video['channel_title'],
+                  '  Category Id', video['category_id'])
+            print('Días trending: ', trend_days, '\n')
+        else:
+            print('Categoria no válida')
+            
     else:
         sys.exit(0)
 sys.exit(0)
