@@ -322,6 +322,7 @@ def findWithTags(catalog,country,tag):
             lt.addLast(tag_list, video)
     return tag_list
 
+
 def findMostLikes(list_by_likes, number):
     """
     Requerimiento 4
@@ -342,10 +343,12 @@ def findMostLikes(list_by_likes, number):
         
     return topVideos
 
+
 def sortLikes(video_list): 
     likes_sort = video_list.copy()
     likes_sort = mer.sort(likes_sort, cmpLikes)
     return likes_sort
+
 
 def cmpLikes(video1, video2): 
     return int(video1['likes']) < int(video2['likes'])

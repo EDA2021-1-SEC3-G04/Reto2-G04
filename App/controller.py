@@ -121,19 +121,97 @@ def topCountryCategory(catalog, number, country, category_id):
     Función base requerimiento 1. 
     Retorna lista con los top x videos con más views de un pais y una categoria
     """
+
+    delta_time = -1.0
+    delta_memory = -1.0
+    tracemalloc.start()
+    start_time = getTime()
+    start_memory = getMemory()
+
+
     category_list = getCategory(catalog, category_id)
     sorted_cat_list = sortViews(category_list['videos'])
     top_vids = findTopsCountryCategory(sorted_cat_list, number, country)
-    return top_vids
+
+
+    stop_memory = getMemory()
+    stop_time = getTime()
+    tracemalloc.stop()
+    delta_time = stop_time - start_time
+    delta_memory = deltaMemory(start_memory, stop_memory)
+
+
+    return top_vids, delta_time, delta_memory
 
 def topVidByCountry(country_list):
     """
     Función base requerimiento 2. 
     Retorna lista con el video que más dias a sido trending 
     """
+    delta_time = -1.0
+    delta_memory = -1.0
+    tracemalloc.start()
+    start_time = getTime()
+    start_memory = getMemory()
+
+
     sorted_country_lst = sortVideoId(country_list['videos'])
     top_countries = findTopVideoCountry(sorted_country_lst)
-    return top_countries
+
+    stop_memory = getMemory()
+    stop_time = getTime()
+    tracemalloc.stop()
+    delta_time = stop_time - start_time
+    delta_memory = deltaMemory(start_memory, stop_memory)
+
+
+    return top_countries, delta_time, delta_memory
+
+def topVidByCategory(catalog, category_id):
+    """
+    Función base requerimiento 3. 
+    """
+    delta_time = -1.0
+    delta_memory = -1.0
+    tracemalloc.start()
+    start_time = getTime()
+    start_memory = getMemory()
+
+
+    category_list = getCategory(catalog, category_id)
+    sorted_cat_lst = sortVideoId(category_list['videos'])
+    top_vid = findTopVideo(sorted_cat_lst)
+
+    stop_memory = getMemory()
+    stop_time = getTime()
+    tracemalloc.stop()
+    delta_time = stop_time - start_time
+    delta_memory = deltaMemory(start_memory, stop_memory)
+
+    return top_vid, delta_time, delta_memory
+
+
+def listVidTag(catalog,country, tag, cant):
+    """
+    Función base requerimiento 4. 
+    """
+    delta_time = -1.0
+    delta_memory = -1.0
+    tracemalloc.start()
+    start_time = getTime()
+    start_memory = getMemory()
+
+    list_tags = findWithTags(catalog, country, tag)
+    list_by_likes = sortLikes(list_tags)
+    top_videos = findMostLikes(list_by_likes, cant)
+
+    stop_memory = getMemory()
+    stop_time = getTime()
+    tracemalloc.stop()
+    delta_time = stop_time - start_time
+    delta_memory = deltaMemory(start_memory, stop_memory)
+
+    return top_videos, delta_time, delta_memory
 
 
 def videoSize(catalog):
@@ -169,14 +247,7 @@ def getId(category_ids, category_name):
     """
     return model.getId(category_ids, category_name)
 
-def topVidByCategory(catalog, category_id):
-    """
-    Función base requerimiento 3. 
-    """
-    category_list = getCategory(catalog, category_id)
-    sorted_cat_lst = sortVideoId(category_list['videos'])
-    top_vid = findTopVideo(sorted_cat_lst)
-    return top_vid
+
 
 
 def getCategory(catalog, category_id):
@@ -191,14 +262,7 @@ def findTopVideo(category_list):
     """
     return model.findTopVideo(category_list)
 
-def listVidTag(catalog,country, tag, cant):
-    """
-    Función base requerimiento 4. 
-    """
-    list_tags = findWithTags(catalog,country,tag)
-    list_by_likes = sortLikes(list_tags)
-    top_videos = findMostLikes(list_by_likes, cant)
-    return top_videos
+
 
 def findWithTags(catalog,country,tag): 
     """

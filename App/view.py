@@ -110,6 +110,10 @@ while True:
                 result = controller.topCountryCategory(catalog, number, country, category_id)
                 print("\nLos top", number, "videos de", country, "&", category, "son:\n")
                 printTopVideos(result)
+                print("***  Medidas de tiempo y espacio   ***")
+                print("Tiempo [ms]: ", f"{answer[1]:.3f}", "  ||  ",
+                    "Memoria [kB]: ", f"{answer[2]:.3f}")
+                
             else: 
                 print("País y/o categoría no válida")
         else:
@@ -122,13 +126,16 @@ while True:
 
         valid_country = controller.getCountry(catalog, country)
         if valid_country is not None:
-            top_video = controller.topVidByCountry(valid_country)
-            video = top_video[0]
-            trend_days = top_video[1]
+            answer = controller.topVidByCountry(valid_country)
+            video = answer[0][0]
+            trend_days = answer[0][1]
             print('\nEl video más trending de', country, 'fue:')
             print('Título:', video['title'], ' Canal: ', video['channel_title'],
                   '  Country: ', video['country'])
             print('Días trending: ', trend_days, '\n')
+            print("***  Medidas de tiempo y espacio   ***")
+            print("Tiempo [ms]: ", f"{answer[1]:.3f}", "  ||  ",
+                    "Memoria [kB]: ", f"{answer[2]:.3f}")
         else:
             print('País no válido')
 
@@ -136,15 +143,18 @@ while True:
     elif int(inputs[0]) == 4:
         category_name = input(
             "Categoria a consultar el video trending x más dias: ")
-        category_id = controller.getCategoryId(catalog,category_name)
+        category_id = controller.getCategoryId(catalog, category_name)
         if category_id is not None:
-            top_video = controller.topVidByCategory(catalog, category_id)
-            video = top_video[0]
-            trend_days = top_video[1]
+            answer = controller.topVidByCategory(catalog, category_id)
+            video = answer[0][0]
+            trend_days = answer[0][1]
             print('\nEl video más trending de', category_name, 'fue:')
             print('Título:', video['title'], ' Canal: ', video['channel_title'],
                   '  Category Id', video['category_id'])
             print('Días trending: ', trend_days, '\n')
+            print("***  Medidas de tiempo y espacio   ***")
+            print("Tiempo [ms]: ", f"{answer[1]:.3f}", "  ||  ",
+                    "Memoria [kB]: ", f"{answer[2]:.3f}")
         else:
             print('Categoria no válida')
 
@@ -156,7 +166,10 @@ while True:
             list_vid_countries = controller.getCountry(catalog, country)
             if list_vid_countries is not None: 
                 list_vid_tag = controller.listVidTag(catalog, country, tag, int(cant))
-                printTopVideosTags(list_vid_tag)
+                printTopVideosTags(list_vid_tag[0])
+                print("***  Medidas de tiempo y espacio   ***")
+                print("Tiempo [ms]: ", f"{list_vid_tag[1]:.3f}", "  ||  ",
+                    "Memoria [kB]: ", f"{list_vid_tag[2]:.3f}")
             else: 
                 print('País no válido') 
         else: 
