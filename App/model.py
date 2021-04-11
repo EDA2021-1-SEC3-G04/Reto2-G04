@@ -210,7 +210,7 @@ def getCountry(catalog, country):
         country = me.getValue(country)
     return country
 
-def getId(category_ids, category_name)): 
+def getId(category_ids, category_name): 
     category = mp.get(catalog['by_categories'], category)
     if category is not None: 
         category = me.getValue(category)
