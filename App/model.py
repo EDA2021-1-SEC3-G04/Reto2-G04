@@ -330,17 +330,19 @@ def findMostLikes(list_by_likes, number):
     """
     pos = lt.size(list_by_likes)
     topVideos = lt.newList(datastructure='ARRAY_LIST', cmpfunction=cmpVideoIdsLt)
-    lt.addLast(topVideos, lt.lastElement(list_by_likes))
-    number -= 1
-    while number > 0 and pos > 0:
-        current_element = lt.getElement(list_by_likes, pos)
-        pos_present = lt.isPresent(topVideos, current_element)
-        if pos_present == 0:
-            lt.addLast(topVideos, current_element)
-            number -= 1
-        pos -= 1
+    if pos > 0:
+        lt.addLast(topVideos, lt.lastElement(list_by_likes))
+        number -= 1
+        while number > 0 and pos > 0:
+            current_element = lt.getElement(list_by_likes, pos)
+            pos_present = lt.isPresent(topVideos, current_element)
+            if pos_present == 0:
+                lt.addLast(topVideos, current_element)
+                number -= 1
+            pos -= 1
         
     return topVideos
+
 
 def sortLikes(video_list): 
     likes_sort = video_list.copy()
