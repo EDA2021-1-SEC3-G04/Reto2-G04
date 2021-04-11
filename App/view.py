@@ -105,14 +105,14 @@ while True:
             country = input("Pais a consultar los top " + str(number) + " videos: ")
             category = input("Categoria a consultar los top " + str(number) + " videos: ")
             category_id = controller.getCategoryId(catalog, category)
-            valid_country=controller.getCountry(catalog,country)
+            valid_country = controller.getCountry(catalog, country)
             if category_id is not None and valid_country is not None:
                 result = controller.topCountryCategory(catalog, number, country, category_id)
                 print("\nLos top", number, "videos de", country, "&", category, "son:\n")
-                printTopVideos(result)
+                printTopVideos(result[0])
                 print("***  Medidas de tiempo y espacio   ***")
-                print("Tiempo [ms]: ", f"{answer[1]:.3f}", "  ||  ",
-                    "Memoria [kB]: ", f"{answer[2]:.3f}")
+                print("Tiempo [ms]: ", f"{result[1]:.3f}", "  ||  ",
+                    "Memoria [kB]: ", f"{result[2]:.3f}")
                 
             else: 
                 print("País y/o categoría no válida")
