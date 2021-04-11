@@ -191,7 +191,32 @@ def findTopVideo(category_list):
     """
     return model.findTopVideo(category_list)
 
+def listVidTag(catalog,country, tag, cant):
+    """
+    Función base requerimiento 4. 
+    """
+    list_tags = findWithTags(catalog,country,tag)
+    list_by_likes = sortLikes(list_tags)
+    top_videos = findMostLikes(list_by_likes, cant)
+    return top_videos
 
+def findWithTags(catalog,country,tag): 
+    """
+    Llama al a función del modelo que busca los videos de un pais que tengan el tag indicado
+    """
+    return model.findWithTags(catalog,country, tag)
+
+def findMostLikes(list_by_likes, cant): 
+    """
+    Llama a funcion del modelo que busca y retorna los x videos con más likes
+    """
+    return model.findMostLikes(list_by_likes, cant)
+
+def sortLikes(list_sort): 
+    """
+    Ordena los libros por likes
+    """
+    return model.sortLikes(list_sort)
 # ======================================
 # Funciones para medir tiempo y memoria
 # ======================================

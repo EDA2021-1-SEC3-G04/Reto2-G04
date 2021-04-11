@@ -45,15 +45,14 @@ def newCatalog():
     catalog = {'videos': None,
                'by_countries': None,
                'by_categories': None,
-               'category-id': None,
-               'video-id': None}
+               'category-id': None}
 
     catalog['videos'] = lt.newList(datastructure='ARRAY_LIST', cmpfunction=cmpVideoIdsLt)
 
     # TODO: este es el que toca cambiar el maptype y el loadfactor!
     catalog['by_categories'] = mp.newMap(97, 
                                         maptype='PROBING', 
-                                        loadfactor=0.3, 
+                                        loadfactor=0.5, 
                                         comparefunction=cmpVideoCategoriesId)
 
     catalog['category-id'] = mp.newMap(97, 
@@ -61,10 +60,6 @@ def newCatalog():
                                         loadfactor=0.5,   
                                         comparefunction=cmpVideoCategories)
 
-    # catalog['video-id'] = mp.newMap(390000, 
-    #                                     maptype='CHAINING', 
-    #                                     loadfactor=4.0, 
-    #                                     comparefunction=cmpVideoIds)
     catalog['by_countries'] = mp.newMap(19, 
                                         maptype='PROBING', 
                                         loadfactor=0.5,
@@ -78,7 +73,6 @@ def addVideo(catalog, video):
     Se añade un video a a lista de videos
     """
     lt.addLast(catalog['videos'], video)
-    # mp.put(catalog['video-id'], video["video_id"], video)
 
     # Funciones para añadir datos a las listas de pais y categoria
     addVideoCountry(catalog, video)
@@ -316,6 +310,46 @@ def findTopVideo(category_list):
             top_video = me.getValue(mp.get(item, 'video'))
 
     return top_video, top_reps
+
+
+def findWithTags(catalog,country,tag):
+    country_pair=mp.get(catalog["by_countries"],country)
+    country_list=me.getValue(country_pair)
+    tag_list = lt.newList(datastructure='ARRAY_LIST')
+    for video in lt.iterator(country_list["videos"]):
+        current_tags = video['tags']
+        if tag in current_tags:
+            lt.addLast(tag_list, video)
+    return tag_list
+
+def findMostLikes(list_by_likes, number):
+    """
+    Requerimiento 4
+    Crea una lista con los x videos con más likes dentro de una lista que ya esta ordenada. 
+    Si un video ya se encuntra en la lista no lo repite. 
+    """
+    pos = lt.size(list_by_likes)
+    topVideos = lt.newList(datastructure='ARRAY_LIST', cmpfunction=cmpVideoIdsLt)
+    lt.addLast(topVideos, lt.lastElement(list_by_likes))
+    number -= 1
+    while number > 0 and pos > 0:
+        current_element = lt.getElement(list_by_likes, pos)
+        pos_present = lt.isPresent(topVideos, current_element)
+        if pos_present == 0:
+            lt.addLast(topVideos, current_element)
+            number -= 1
+        pos -= 1
+        
+    return topVideos
+
+def sortLikes(video_list): 
+    likes_sort = video_list.copy()
+    likes_sort = mer.sort(likes_sort, cmpLikes)
+    return likes_sort
+
+def cmpLikes(video1, video2): 
+    return int(video1['likes']) < int(video2['likes'])
+
 
 # Funciones utilizadas para comparar elementos dentro de una lista
 

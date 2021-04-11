@@ -71,6 +71,15 @@ def printTopVideos(video_list):
         print('*'*50)
     print('Fin\n')
 
+def printTopVideosTags(list_vid_tag): 
+    """
+    Imprime los videos del requerimiento 4 con los datos title, channel, publish time, views, likes, dislikes, tags
+    """ 
+    for video in list_vid_tag['elements']:
+        print('Title:',  video['title'], '––Channel:', video['channel_title'],'––Publish Time: ', video['publish_time'], '––Views:', video['views'], '––Likes:', video['likes'], '––Dislikes:', video['dislikes'], '––Tags:', video['tags'])
+        input('Presione enter para ver el siguente video')
+        print('*'*50)
+    print('Fin\n')
 
     
 catalog = None
@@ -96,11 +105,13 @@ while True:
             country = input("Pais a consultar los top " + str(number) + " videos: ")
             category = input("Categoria a consultar los top " + str(number) + " videos: ")
             category_id = controller.getCategoryId(catalog, category)
-            # TODO: validar country y category
-            if category_id is not None:
+            valid_country=controller.getCountry(catalog,country)
+            if category_id is not None and valid_country is not None:
                 result = controller.topCountryCategory(catalog, number, country, category_id)
                 print("\nLos top", number, "videos de", country, "&", category, "son:\n")
                 printTopVideos(result)
+            else: 
+                print("País y/o categoría no válida")
         else:
             print("No se aceptan numero negativos")
         # printTopVideos(result)
@@ -136,7 +147,19 @@ while True:
             print('Días trending: ', trend_days, '\n')
         else:
             print('Categoria no válida')
-            
-    else:
+
+    elif int(inputs[0]) == 5: 
+        cant = input("Cantidad a consultar de videos con más likes: ")
+        if int(cant) > 0:
+            tag = input("Tag específico a consultar de videos con más likes: ")
+            country = input("País a consultar el video trending x más dias: ")
+            list_vid_countries = controller.getCountry(catalog, country)
+            if list_vid_countries is not None: 
+                list_vid_tag = controller.listVidTag(catalog, country, tag, int(cant))
+                printTopVideosTags(list_vid_tag)
+            else: 
+                print('País no válido') 
+        else: 
+            print("No se aceptan números negativos")
+    else: 
         sys.exit(0)
-sys.exit(0)
