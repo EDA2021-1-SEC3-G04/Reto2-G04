@@ -34,6 +34,7 @@ se hace la solicitud al controlador para ejecutar la
 operación solicitada
 """
 
+
 def printMenu():
     """
     Imprime el menu
@@ -60,6 +61,7 @@ def loadData(catalog):
     answer = controller.loadData(catalog)
     return answer
     
+
 def printTopVideos(video_list): 
     """
     Imprime los videos del requerimiento 1 con los datos trending date, title, channel, publish time
@@ -71,10 +73,11 @@ def printTopVideos(video_list):
         print('*'*50)
     print('Fin\n')
 
+
 def printTopVideosTags(list_vid_tag): 
     """
     Imprime los videos del requerimiento 4 con los datos title, channel, publish time, views, likes, dislikes, tags
-    """ 
+    """
     for video in list_vid_tag['elements']:
         print('Title:',  video['title'], '––Channel:', video['channel_title'],'––Publish Time: ', video['publish_time'], '––Views:', video['views'], '––Likes:', video['likes'], '––Dislikes:', video['dislikes'], '––Tags:', video['tags'])
         input('Presione enter para ver el siguente video')

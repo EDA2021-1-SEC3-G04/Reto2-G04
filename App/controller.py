@@ -29,6 +29,8 @@ import tracemalloc
 """
 El controlador se encarga de mediar entre la vista y el modelo.
 """
+# Inicialización del Catálogo de libros
+
 
 def initCatalog():
     """
@@ -63,6 +65,7 @@ def loadData(catalog):
 
     return delta_time, delta_memory
     
+
 def loadVideos(catalog):
     """
     Carga los videos del archivo.  
@@ -84,16 +87,16 @@ def loadCategoryIds(catalog):
     for category in input_file:
         model.addCategory(catalog, category)
 
-# Inicialización del Catálogo de libros
 
-# Funciones para la carga de datos
+""" Funciones de ordenamiento """
 
-# Funciones de ordenamiento
+
 def sortViews(views_list):
     """
     Ordena los libros por views
     """
     return model.sortViews(views_list)
+
 
 def sortVideoId(category_list):
     """
@@ -102,20 +105,53 @@ def sortVideoId(category_list):
     return model.sortVideoId(category_list)
 
 
-# Funciones de consulta sobre el catálogo
+def sortLikes(list_sort): 
+    """
+    Ordena los libros por likes
+    """
+    return model.sortLikes(list_sort)
 
+
+# FUNCIONES DE CONSULTA SOBRE EL CATALOG
+
+
+# Funciones getX
 def getCategoryId(catalog, category):
     """
-    Retorna la informacion de esa categoria: lista de videos correspondientes
+    Retorna el Id asociado a una categoria
     """
     return model.getCategoryId(catalog, category)
 
+
 def getCategory(catalog, category_id): 
+    """
+    Retorna la lista asociada a una categoria
+    """
     return model.getCategory(catalog, category_id)
 
+
 def getCountry(catalog, country):
+    """
+    Retorna la lista asociada a un pais
+    """
     return model.getCountry(catalog, country)
 
+
+def videoSize(catalog):
+    """
+    Numero de videos cargados al catalogo
+    """
+    return model.videoSize(catalog)
+
+
+def categorySize(catalog):
+    """
+    Numero de videos cargados al catalogo
+    """
+    return model.videoSize(catalog)
+
+
+# REQUERIMIENTO 1
 def topCountryCategory(catalog, number, country, category_id): 
     """
     Función base requerimiento 1. 
@@ -126,6 +162,16 @@ def topCountryCategory(catalog, number, country, category_id):
     top_vids = findTopsCountryCategory(sorted_cat_list, number, country)
     return top_vids
 
+
+def findTopsCountryCategory(sorted_cat_list, number, country): 
+    """
+    Llama a funcion del modelo que busca y retorna los x videos con más views que son del 
+    pais correspondiente
+    """
+    return model.findTopsCountryCategory(sorted_cat_list, number, country)
+
+
+# REQUERIMIENTO 2
 def topVidByCountry(country_list):
     """
     Función base requerimiento 2. 
@@ -136,26 +182,6 @@ def topVidByCountry(country_list):
     return top_countries
 
 
-def videoSize(catalog):
-    """
-    Numero de videos cargados al catalogo
-    """
-    return model.videoSize(catalog)
-
-def categorySize(catalog):
-    """
-    Numero de videos cargados al catalogo
-    """
-    return model.videoSize(catalog)
-
-
-def findTopsCountryCategory(sorted_cat_list, number, country): 
-    """
-    Llama a funcion del modelo que busca y retorna los x videos con más views que son del 
-    pais correspondiente
-    """
-    return model.findTopsCountryCategory(sorted_cat_list, number, country)
-
 def findTopVideoCountry(country_list):
     """
     Llama al a función del modelo que busca el video que más dais a sido trending de ese país
@@ -163,12 +189,7 @@ def findTopVideoCountry(country_list):
     return model.findTopVideoCountries(country_list)
 
 
-def getId(category_ids, category_name):
-    """
-    Retorna los el id que corresponde al el nombre de una categoria 
-    """
-    return model.getId(category_ids, category_name)
-
+# REQUERIMIENTO 3
 def topVidByCategory(catalog, category_id):
     """
     Función base requerimiento 3. 
@@ -179,32 +200,30 @@ def topVidByCategory(catalog, category_id):
     return top_vid
 
 
-def getCategory(catalog, category_id):
-    """
-    Retorna la informacion de esa categoria: lista de videos correspondientes
-    """
-    return model.getCategory(catalog, category_id)
-
 def findTopVideo(category_list):
     """
     Llama al a función del modelo que busca el video que más dais a sido trending de esa categoria
     """
     return model.findTopVideo(category_list)
 
-def listVidTag(catalog,country, tag, cant):
+
+# REQUERIMIENTO 4
+def listVidTag(catalog, country, tag, cant):
     """
     Función base requerimiento 4. 
     """
-    list_tags = findWithTags(catalog,country,tag)
+    list_tags = findWithTags(catalog, country, tag)
     list_by_likes = sortLikes(list_tags)
     top_videos = findMostLikes(list_by_likes, cant)
     return top_videos
 
-def findWithTags(catalog,country,tag): 
+
+def findWithTags(catalog, country, tag): 
     """
     Llama al a función del modelo que busca los videos de un pais que tengan el tag indicado
     """
-    return model.findWithTags(catalog,country, tag)
+    return model.findWithTags(catalog, country, tag)
+
 
 def findMostLikes(list_by_likes, cant): 
     """
@@ -212,11 +231,7 @@ def findMostLikes(list_by_likes, cant):
     """
     return model.findMostLikes(list_by_likes, cant)
 
-def sortLikes(list_sort): 
-    """
-    Ordena los libros por likes
-    """
-    return model.sortLikes(list_sort)
+
 # ======================================
 # Funciones para medir tiempo y memoria
 # ======================================
@@ -250,4 +265,5 @@ def deltaMemory(start_memory, stop_memory):
     # de Byte -> kByte
     delta_memory = delta_memory/1024.0
     return delta_memory
+
 

@@ -67,7 +67,6 @@ def newCatalog():
     return catalog
 
 # Funciones para agregar informacion al catalogo
-
 def addVideo(catalog, video):
     """
     Se añade un video a a lista de videos
@@ -121,20 +120,20 @@ def addVideoCategory(catalog, video):
     Adiciona una categoria a lista de categorias si este no esta.
     Las listas de cada pais guarda referencias a los videos de dicho pais
     """
-    try: 
+    try:
         categories = catalog['by_categories']
-        if video['category_id'] != '': 
+        if video['category_id'] != '':
             category_id = int(video['category_id'])
-        else: 
+        else:
             # No sabemos si el -1
             category_id = -1
         exist_category = mp.contains(categories, category_id)
 
-        if exist_category: 
+        if exist_category:
             entry = mp.get(categories, category_id)
             category = me.getValue(entry)
 
-        else: 
+        else:
             category = newCategory(category_id)
             mp.put(categories, category_id, category)
 
@@ -146,8 +145,6 @@ def addVideoCategory(catalog, video):
 
 
 # Funciones para creacion de datos
-
-
 def newCategory(category_id):
     """
     Crea una nueva estructura para modelar los videos de un category id
@@ -182,8 +179,10 @@ def newCategoryId(id, name):
 
 
 # Funciones de consulta
-
 def getCategoryId(catalog, category):
+    """
+    Busca y retorna el ID asociado a una categoria, si no existe retorna None
+    """
     exists_category = mp.contains(catalog['category-id'], category)
     category_id = None
     if exists_category: 
@@ -204,11 +203,6 @@ def getCountry(catalog, country):
         country = me.getValue(country)
     return country
 
-def getId(category_ids, category_name): 
-    category = mp.get(catalog['by_categories'], category)
-    if category is not None: 
-        category = me.getValue(category)
-    return category
 
 def videoSize(catalog):
     """
@@ -224,6 +218,7 @@ def categorySize(catalog):
     return lt.size(catalog['category-id'])
 
 
+# REQUERIMEIENTO 1
 def findTopsCountryCategory(sorted_cat_list, number, country): 
     """
     Requerimiento 1
@@ -240,7 +235,7 @@ def findTopsCountryCategory(sorted_cat_list, number, country):
 
     return topVideos
 
-
+# REQUERIMIENTO 2
 def findTopVideoCountries(country_list):
     """
     Requerimiento 2
@@ -276,7 +271,7 @@ def findTopVideoCountries(country_list):
     return top_video, top_reps
 
 
-
+# REQUERIMIENTO 3
 def findTopVideo(category_list):
     """
     Requerimiento 3
@@ -312,15 +307,17 @@ def findTopVideo(category_list):
     return top_video, top_reps
 
 
-def findWithTags(catalog,country,tag):
-    country_pair=mp.get(catalog["by_countries"],country)
-    country_list=me.getValue(country_pair)
+# REQUERIMIENTO 4
+def findWithTags(catalog, country, tag):
+    country_pair = mp.get(catalog["by_countries"], country)
+    country_list = me.getValue(country_pair)
     tag_list = lt.newList(datastructure='ARRAY_LIST')
     for video in lt.iterator(country_list["videos"]):
         current_tags = video['tags']
         if tag in current_tags:
             lt.addLast(tag_list, video)
     return tag_list
+
 
 def findMostLikes(list_by_likes, number):
     """
@@ -339,22 +336,11 @@ def findMostLikes(list_by_likes, number):
             if pos_present == 0:
                 lt.addLast(topVideos, current_element)
                 number -= 1
-            pos -= 1
-        
+            pos -= 1     
     return topVideos
 
 
-def sortLikes(video_list): 
-    likes_sort = video_list.copy()
-    likes_sort = mer.sort(likes_sort, cmpLikes)
-    return likes_sort
-
-def cmpLikes(video1, video2): 
-    return int(video1['likes']) < int(video2['likes'])
-
-
 # Funciones utilizadas para comparar elementos dentro de una lista
-
 def cmpVideoIdsLt(id1, id2):
     if id1['video_id'] < id2['video_id']:
         return -1
@@ -362,6 +348,7 @@ def cmpVideoIdsLt(id1, id2):
         return 1
     else:
         return 0
+
 
 def cmpVideoIds(id, entry):
     identry = me.getKey(entry)
@@ -372,6 +359,7 @@ def cmpVideoIds(id, entry):
     else:
         return -1
 
+
 def cmpVideoCategoriesId(id, entry):
     catentry = me.getKey(entry)
     if (int(id) == int(catentry)):
@@ -380,6 +368,7 @@ def cmpVideoCategoriesId(id, entry):
         return 1
     else:
         return -1
+
 
 def cmpVideoCategories(id, entry):
     catentry = me.getKey(entry)
@@ -390,6 +379,7 @@ def cmpVideoCategories(id, entry):
     else:
         return -1
 
+
 def cmpVideoCountries(country, count_entry):
     ctentry = me.getKey(count_entry)
     if (country) == (ctentry):
@@ -399,8 +389,10 @@ def cmpVideoCountries(country, count_entry):
     else:
         return -1
 
+
 def cmpLikes(video1, video2): 
     return int(video1['likes']) < int(video2['likes'])
+
 
 def compVideosByViews(video1, video2):
     views1 = int(video1["views"])
@@ -413,23 +405,26 @@ def compVideosByViews(video1, video2):
     else:
         return 0
 
+
 def cmpVideoIdSort(video1, video2):
     return video1['video_id'] < video2['video_id']
 
 
 # Funciones de ordenamiento
-
 def sortLikes(video_list): 
     likes_sort = video_list.copy()
     likes_sort = mer.sort(likes_sort, cmpLikes)
     return likes_sort
+
 
 def sortViews(catalog):
     sub_list = catalog.copy()
     sorted_list = mer.sort(sub_list, compVideosByViews)
     return sorted_list
 
+
 def sortVideoId(category_list):
     vid_id_sort = category_list.copy()
     vid_id_sort = mer.sort(vid_id_sort, cmpVideoIdSort)
     return vid_id_sort
+
